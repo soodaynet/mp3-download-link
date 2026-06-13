@@ -57,7 +57,7 @@ export const ResultItem: FC<Props> = ({
               onClick={(e) => { e.stopPropagation(); window.open(result.converted!, '_blank') }}
               className={`px-2.5 py-1.5 text-[11px] rounded-md font-medium transition-all ${
                 isPlaying
-                  ? 'bg-rose-500/20 text-rose-400'
+                  ? 'bg-white/10 text-white/50'
                   : 'bg-sky-500/20 text-sky-300 hover:bg-sky-500/30 hover:text-sky-200'
               }`}
             >
@@ -69,7 +69,7 @@ export const ResultItem: FC<Props> = ({
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               className="px-2.5 py-1.5 text-[11px] rounded-md font-medium
-                         bg-white/10 text-white/50 hover:bg-white/20 hover:text-white
+                         bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 hover:text-rose-200
                          transition-all"
             >
               网易云
