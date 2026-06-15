@@ -328,7 +328,6 @@ async function decryptNcm(fileBuffer: ArrayBuffer, fileName: string): Promise<De
   // 用 TextDecoder 获取 base64 字符串（注意：跳过可能存在的 null 字节）
   const rawStr = new TextDecoder().decode(metaEnc.slice(22))
   const b64Encoded = rawStr.replace(/\0.*$/, '') // 去除 null 字节后的内容
-  console.log('[NCM] b64 encoded length:', b64Encoded.length, 'first 40:', b64Encoded.slice(0, 40))
 
   let metaDec: Uint8Array
   try {
@@ -337,7 +336,6 @@ async function decryptNcm(fileBuffer: ArrayBuffer, fileName: string): Promise<De
     for (let i = 0; i < binaryStr.length; i++) {
       b64Decoded[i] = binaryStr.charCodeAt(i)
     }
-    console.log('[NCM] b64 decoded length:', b64Decoded.length, 'hex:', uint8ArrayToHex(b64Decoded, 32))
     // 用 NoPadding 解密，手动剥离 PKCS7 填充（与 ncmdump 完全一致）
     metaDec = aesEcbDecrypt(b64Decoded, NCM_META_KEY, false)
     // 手动剥离 PKCS7 填充
@@ -345,9 +343,7 @@ async function decryptNcm(fileBuffer: ArrayBuffer, fileName: string): Promise<De
     if (padLen > 0 && padLen <= 16) {
       metaDec = metaDec.slice(0, metaDec.length - padLen)
     }
-    console.log('[NCM] metaDec after padding strip, length:', metaDec.length, 'hex:', uint8ArrayToHex(metaDec, 32))
   } catch (e) {
-    console.warn('[NCM] base64 decode failed, trying raw:', e)
     metaDec = aesEcbDecrypt(metaEnc.slice(22), NCM_META_KEY, false)
     const padLen = metaDec[metaDec.length - 1]!
     if (padLen > 0 && padLen <= 16) {
@@ -357,13 +353,12 @@ async function decryptNcm(fileBuffer: ArrayBuffer, fileName: string): Promise<De
 
   const metaRaw = new TextDecoder().decode(metaDec)
   const metaJsonStr = metaRaw.replace(/^music:/, '')
-  console.log('[NCM] meta JSON first 100:', metaJsonStr.slice(0, 100))
 
   let metaJson: Record<string, unknown> = {}
   try {
     metaJson = JSON.parse(metaJsonStr)
   } catch {
-    console.warn('[NCM] 元数据 JSON 解析失败:', metaJsonStr.slice(0, 100))
+    // 元数据 JSON 解析失败，忽略
   }
 
   // 3. 跳过 5 字节 CRC
