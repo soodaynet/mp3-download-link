@@ -6,7 +6,6 @@ export function useBackground(bgUrl: string) {
   useEffect(() => {
     if (!bgUrl) return
     const img = new Image()
-    img.crossOrigin = 'anonymous'
     img.onload = () => {
       document.documentElement.style.setProperty('--bg-image', `url(${bgUrl})`)
       setLoaded(true)
