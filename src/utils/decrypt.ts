@@ -24,13 +24,6 @@ function wordArrayToUint8Array(wa: CryptoJS.lib.WordArray): Uint8Array {
   return result
 }
 
-function uint8ArrayToHex(data: Uint8Array, limit?: number): string {
-  const end = limit ?? data.length
-  return Array.from(data.slice(0, end))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join(' ')
-}
-
 function aesEcbDecrypt(data: Uint8Array, key: CryptoJS.lib.WordArray, stripPadding = true): Uint8Array {
   const wordArray = CryptoJS.lib.WordArray.create(data)
   const cipherParams = CryptoJS.lib.CipherParams.create({ ciphertext: wordArray })
