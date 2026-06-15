@@ -1,0 +1,8 @@
+# Cloudflare Pages 静态资源缓存头
+# 纯静态资产，无需 Functions
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*
+  Cache-Control: public, max-age=3600
